@@ -89,12 +89,6 @@ streamlit run app.py
 
 ---
 
-## 👨‍💻 Author
-
-Niket Singh
-
----
-
 ## ⭐ Acknowledgment
 
 This project is developed for academic and learning purposes in the field of AI & Data Science.
