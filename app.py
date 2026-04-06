@@ -4,6 +4,8 @@ import streamlit as st
 import torch
 from torchvision import transforms
 from PIL import Image
+import gdown
+import os
 
 # ======================
 # CONFIG
@@ -11,22 +13,25 @@ from PIL import Image
 MODEL_PATH = "model.pt"
 IMG_SIZE = 256
 
+# 🔽 GOOGLE DRIVE DOWNLOAD
+url = "https://drive.google.com/uc?id=1yahPijzUJl-oZ3hB8TvLIMDeQiHWvj6A"
+
+if not os.path.exists(MODEL_PATH):
+    with st.spinner("Downloading model... please wait ⏳"):
+        gdown.download(url, MODEL_PATH, quiet=False)
+
 # ======================
 # LOAD MODEL
 # ======================
 @st.cache_resource
 def load_model():
-    # recreate model
     model = models.resnet18(pretrained=False)
-
-    # change final layer for binary classification
     model.fc = nn.Linear(model.fc.in_features, 1)
 
-    # load weights (state_dict)
     model.load_state_dict(torch.load(MODEL_PATH, map_location='cpu'))
-
     model.eval()
     return model
+
 model = load_model()
 
 # ======================
@@ -59,7 +64,6 @@ if uploaded_file is not None:
         with torch.no_grad():
             output = model(img)
 
-            # handle binary or multi-class
             if output.shape[1] == 1:
                 prob = torch.sigmoid(output).item()
             else:
@@ -70,7 +74,6 @@ if uploaded_file is not None:
     st.subheader(f"Prediction: {label}")
     st.write(f"Confidence: {prob:.4f}")
 
-    # colored output
     if label == "PNEUMONIA":
         st.error("⚠️ Pneumonia Detected")
     else:
