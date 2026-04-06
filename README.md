@@ -38,7 +38,6 @@ This project is a **Deep Learning-based web application** that detects **Pneumon
 ```
 📁 chest-xray-app
 │-- app.py
-│-- requirements.txt
 │-- README.md
 ```
 
